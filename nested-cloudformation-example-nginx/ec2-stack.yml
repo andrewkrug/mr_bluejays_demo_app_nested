@@ -103,9 +103,9 @@ Resources:
                 type: aws_cloudwatch_logs
                 inputs:
                   - journald
-                region: ${REGION}
+                region: REGION_PLACEHOLDER
                 group_name: /aws/ec2/systemd/journal
-                stream_name: ${INSTANCE_ID}
+                stream_name: INSTANCE_ID_PLACEHOLDER
                 encoding:
                   codec: json
 
@@ -113,7 +113,7 @@ Resources:
                 type: aws_cloudwatch_logs
                 inputs:
                   - nginx_access_logs
-                region: ${REGION}
+                region: REGION_PLACEHOLDER
                 group_name: /ec2/nginx/logs
                 stream_name: access.log
                 encoding:
@@ -123,7 +123,7 @@ Resources:
                 type: aws_cloudwatch_logs
                 inputs:
                   - nginx_error_logs
-                region: ${REGION}
+                region: REGION_PLACEHOLDER
                 group_name: /ec2/nginx/logs
                 stream_name: error.log
                 encoding:
@@ -131,8 +131,8 @@ Resources:
             EOF
 
             # Substitute variables in the Vector config
-            sed -i "s/\${REGION}/$REGION/g" /etc/vector/vector.yaml
-            sed -i "s/\${INSTANCE_ID}/$INSTANCE_ID/g" /etc/vector/vector.yaml
+            sed -i "s/REGION_PLACEHOLDER/$REGION/g" /etc/vector/vector.yaml
+            sed -i "s/INSTANCE_ID_PLACEHOLDER/$INSTANCE_ID/g" /etc/vector/vector.yaml
 
             # Create nginx config
             cat > /etc/nginx/nginx.conf <<'EOF'
