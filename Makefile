@@ -134,7 +134,6 @@ deploy-predecessors:
 		--template-file s3-stack.yml \
 		--stack-name $(APPLICATION)-s3-stack \
 		--region $(AWS_REGION) \
-		--parameter-overrides S3BucketName=$(S3_BUCKET_NAME) \
 		--no-fail-on-empty-changeset
 	@echo "Step 2: Deploying IAM role stack..."
 	aws cloudformation deploy \
@@ -142,7 +141,7 @@ deploy-predecessors:
 		--stack-name $(APPLICATION)-iam-role-stack \
 		--region $(AWS_REGION) \
 		--capabilities CAPABILITY_IAM \
-		--parameter-overrides ApplicationName=$(APPLICATION) S3BucketName=$(S3_BUCKET_NAME) \
+		--parameter-overrides ApplicationName=$(APPLICATION) \
 		--no-fail-on-empty-changeset
 	@echo "Predecessor stacks deployed successfully"
 
