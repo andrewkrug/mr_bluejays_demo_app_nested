@@ -27,7 +27,7 @@ create-stack:
 	--template-url https://s3-us-west-2.amazonaws.com/${S3_PROD_BUCKET_NAME}/$(APPLICATION)/latest/mr-bluejays-parent.yml \
 	--disable-rollback \
 	--capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
-	--parameter-overrides CloudFormationS3Bucket=${S3_PROD_BUCKET_NAME}
+	--parameters ParameterKey=CloudFormationS3Bucket,ParameterValue=${S3_PROD_BUCKET_NAME}
 
 .PHONY: update-stack
 update-stack:
@@ -35,7 +35,7 @@ update-stack:
 	--stack-name mr-bluejays-latest-${ENVIRONMENT} \
 	--template-url https://s3-us-west-2.amazonaws.com/${S3_PROD_BUCKET_NAME}/$(APPLICATION)/latest/mr-bluejays-parent.yml \
 	--capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
-	--parameter-overrides CloudFormationS3Bucket=${S3_PROD_BUCKET_NAME}
+	--parameters ParameterKey=CloudFormationS3Bucket,ParameterValue=${S3_PROD_BUCKET_NAME}
 
 .PHONY: update-stack-with-changeset
 update-stack-with-changeset:
@@ -45,7 +45,7 @@ update-stack-with-changeset:
 	--change-set-name mr-bluejays-latest-${ENVIRONMENT} \
 	--template-url https://s3-us-west-2.amazonaws.com/${S3_PROD_BUCKET_NAME}/$(APPLICATION)/latest/mr-bluejays-parent.yml \
 	--capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
-	--parameter-overrides CloudFormationS3Bucket=${S3_PROD_BUCKET_NAME}
+	--parameters ParameterKey=CloudFormationS3Bucket,ParameterValue=${S3_PROD_BUCKET_NAME}
 
 .PHONY: clean
 clean:
