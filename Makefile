@@ -32,6 +32,9 @@ all:
 	@echo '  v2-clean             - Delete v2 CloudFormation stack'
 	@echo '  v2-lint              - Lint v2 CloudFormation templates'
 	@echo ''
+	@echo 'Predecessor Stack Commands:'
+	@echo '  deploy-predecessors  - Deploy S3 and IAM role stacks in order'
+	@echo ''
 	@echo 'Current Configuration:'
 	@echo '  AWS Region: $(AWS_REGION)'
 	@echo '  Account ID: $(ACCOUNT_ID)'
@@ -121,6 +124,26 @@ v2-clean:
 v2-lint:
 	@echo "Linting version 2 templates..."
 	cd $(V2_DIR) && $(MAKE) lint
+
+# Predecessor stacks deployment
+.PHONY: deploy-predecessors
+deploy-predecessors:
+	@echo "Deploying predecessor stacks in order..."
+	@echo "Step 1: Deploying S3 stack..."
+	aws cloudformation deploy \
+		--template-file s3-stack.yml \
+		--stack-name $(APPLICATION)-s3-stack \
+		--region $(AWS_REGION) \
+		--no-fail-on-empty-changeset
+	@echo "Step 2: Deploying IAM role stack..."
+	aws cloudformation deploy \
+		--template-file iam-role.yml \
+		--stack-name $(APPLICATION)-iam-role-stack \
+		--region $(AWS_REGION) \
+		--capabilities CAPABILITY_IAM \
+		--parameter-overrides ApplicationName=$(APPLICATION) \
+		--no-fail-on-empty-changeset
+	@echo "Predecessor stacks deployed successfully"
 
 # Utility targets
 .PHONY: clean-all

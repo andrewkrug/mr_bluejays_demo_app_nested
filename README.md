@@ -205,6 +205,24 @@ Before deploying the main application, you must deploy two prerequisite stacks i
 
 ⚠️ **Important:** Deploy these in order: S3 Stack → IAM Role Stack
 
+#### Quick Method: Using the Makefile
+
+The easiest way to deploy both prerequisite stacks in the correct order:
+
+```bash
+make deploy-predecessors
+```
+
+This single command will:
+1. Deploy the S3 analytics bucket stack (`s3-stack.yml`) first
+2. Wait for it to complete
+3. Deploy the IAM role stack (`iam-role.yml`) second
+4. Handle the required IAM capabilities automatically
+
+#### Manual Method: Step-by-Step Deployment
+
+If you prefer to deploy the stacks manually or want to understand each step:
+
 #### Step 0.1: Deploy the S3 Analytics Bucket Stack
 
 This creates an S3 bucket for analytics data and stores its ARN in SSM Parameter Store.
@@ -631,6 +649,7 @@ make clean-all
 - `make setup-bucket` - Create S3 bucket for CloudFormation templates
 - `make check-bucket` - Verify S3 bucket exists and is accessible
 - `make show-config` - Display current configuration
+- `make deploy-predecessors` - Deploy S3 and IAM role prerequisite stacks in order
 
 ### Version 1 Commands
 - `make v1-publish` - Publish v1 templates to S3
