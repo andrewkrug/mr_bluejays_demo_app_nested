@@ -68,51 +68,50 @@ Resources:
           Arn: !Ref InstanceProfileArn
         UserData:
           Fn::Base64: !Sub |
-            #cloud-config
+            #!/bin/bash
+            set -e
 
-            packages:
-              - awslogs
+            # Install CloudWatch Agent
+            dnf install -y amazon-cloudwatch-agent
 
-            write_files:
-              - content: |
-                  #
-                  # ------------------------------------------
-                  # CLOUDWATCH LOGS AGENT CONFIGURATION FILE
-                  # ------------------------------------------
-                  [general]
-                  state_file = /var/awslogs/state/agent-state
-                  use_gzip_http_content_encoding = true
+            # Configure CloudWatch Agent
+            cat > /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json <<'EOF'
+            {
+              "logs": {
+                "logs_collected": {
+                  "files": {
+                    "collect_list": [
+                      {
+                        "file_path": "/var/log/messages",
+                        "log_group_name": "/var/log/messages",
+                        "log_stream_name": "{instance_id}",
+                        "timezone": "Local"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+            EOF
 
-                  [/var/log/messages]
-                  datetime_format = %b %d %H:%M:%S
-                  file = /var/log/messages
-                  buffer_duration = 5000
-                  log_stream_name = {instance_id}
-                  initial_position = start_of_file
-                  log_group_name = /var/log/messages
+            # Create analytics environment variable
+            echo "export BLUEJAYS_ANALYTICS=${AnalyticsBucket}" > /etc/profile.d/analytics-info.sh
 
-                path: /etc/awslogs/awslogs.conf
+            # Create blue-jays profile script
+            touch /etc/profile.d/blue-jays.sh
+            chmod +x /etc/profile.d/blue-jays.sh
 
-              - content: |
-                  [plugins]
-                  cwlogs = cwlogs
+            # Install and start SSM agent
+            dnf install -y https://s3.${AWS::Region}.amazonaws.com/amazon-ssm-${AWS::Region}/latest/linux_amd64/amazon-ssm-agent.rpm
+            systemctl enable amazon-ssm-agent
+            systemctl start amazon-ssm-agent
 
-                  [default]
-                  region = ${AWS::Region}
-                path: /etc/awslogs/awscli.conf
-
-              - content: |
-                  echo export BLUEJAYS_ANALYTICS=${AnalyticsBucket}
-                path: /etc/profile.d/analytics-info
-            runcmd:
-                - mkdir -p /var/awslogs/state
-                - pip install --upgrade awscli
-                - touch /etc/profile.d/blue-jays.sh
-                - chmod +x /etc/profile.d/blue-jays.sh
-                - sudo yum install -y https://s3.us-west-2.amazonaws.com/amazon-ssm-us-west-2/latest/linux_amd64/amazon-ssm-agent.rpm
-                - sudo start amazon-ssm-agent
-                - sudo /etc/init.d/awslogs start
-                - sudo chkconfig awslogs on
+            # Start CloudWatch Agent
+            /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
+              -a fetch-config \
+              -m ec2 \
+              -s \
+              -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
         SecurityGroupIds:
           - Ref: InstanceSecGroup
         InstanceType: !Ref InstanceSize
