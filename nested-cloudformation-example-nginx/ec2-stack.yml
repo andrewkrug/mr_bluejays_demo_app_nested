@@ -79,20 +79,12 @@ Resources:
             {
               "logs": {
                 "logs_collected": {
+                  "journal": {
+                    "log_group_name": "/aws/ec2/systemd/journal",
+                    "log_stream_name": "{instance_id}"
+                  },
                   "files": {
                     "collect_list": [
-                      {
-                        "file_path": "/var/log/messages",
-                        "log_group_name": "/var/log/messages",
-                        "log_stream_name": "{instance_id}",
-                        "timezone": "Local"
-                      },
-                      {
-                        "file_path": "/var/log/secure",
-                        "log_group_name": "/var/log/secure",
-                        "log_stream_name": "{instance_id}",
-                        "timezone": "Local"
-                      },
                       {
                         "file_path": "/var/log/nginx/access.log",
                         "log_group_name": "/ec2/nginx/logs",
