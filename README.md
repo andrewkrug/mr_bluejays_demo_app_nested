@@ -109,13 +109,13 @@ aws ec2 describe-images \
 
 **Command to check if specific AMI exists:**
 ```bash
-aws ec2 describe-images --image-ids ami-03c0c92f8de739e34 --query 'Images[0].ImageId' --output text
+aws ec2 describe-images --image-ids ami-05676382cb2cd06ac --query 'Images[0].ImageId' --output text
 ```
 
-**Example output:** `ami-03c0c92f8de739e34`
+**Example output:** `ami-05676382cb2cd06ac`
 
 **Where it's used:**
-- `mr-bluejays-parent.yml:69` - `BlueJaysAMI: "ami-03c0c92f8de739e34"`
+- `mr-bluejays-parent.yml:69` - `BlueJaysAMI: "ami-05676382cb2cd06ac"`
 - **Important:** This AMI ID is hardcoded and may need updating for your region
 
 ### 6. Verify All Configuration
@@ -164,7 +164,7 @@ aws sts get-caller-identity
 | S3 Bucket | Auto-generated from Account ID + Region | `cloudformation.us-west-2.123456789012` | Template storage |
 | Instance Profile ARN | `aws iam list-instance-profiles` | `arn:aws:iam::123456789012:instance-profile/bluejays-delivery-role` | EC2 stack |
 | Analytics Bucket | `aws ssm get-parameter --name /bluejays/analyticsbucketarn` | `arn:aws:s3:::analytics-bucket` | SSM parameter |
-| AMI ID | `aws ec2 describe-images` (region-specific) | `ami-03c0c92f8de739e34` | EC2 instances |
+| AMI ID | `aws ec2 describe-images` (region-specific) | `ami-05676382cb2cd06ac` | EC2 instances |
 
 ### Notes:
 - The parent Makefile **automatically detects** Account ID and constructs the S3 bucket name
