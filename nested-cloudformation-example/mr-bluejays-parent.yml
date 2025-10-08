@@ -4,7 +4,7 @@ Parameters:
   InstanceType:
     Type: String
     Description: EC2 instance type, e.g. m1.small, m1.large, etc.
-    Default: t2.micro
+    Default: t3.micro
   InstanceProfileArn:
     Type: String
     Description: The ARN of the instance profile to bind to the hosts.  This will have already been formed in another stack with IAM Permissions.
