@@ -13,7 +13,7 @@ Parameters:
   BlueJaysAMI:
     Type: String
     Description: "AMI ID must be in us-west-2 only."
-    Default: "ami-05676382cb2cd06ac"
+    Default: "ami-0aa87bb13770d5d3d"
   ELBSecGroup:
     Type: String
     Description: "The ID of the ELB security group."

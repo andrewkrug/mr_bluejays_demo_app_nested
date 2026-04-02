@@ -66,7 +66,7 @@ Resources:
         ApplicationName: !Ref ApplicationName
         Environment: !Ref Environment
         CustomVpcId: !GetAtt NetworkingStack.Outputs.VpcId
-        BlueJaysAMI: "ami-05676382cb2cd06ac"
+        BlueJaysAMI: "ami-0aa87bb13770d5d3d"
         ELBSecGroup: !GetAtt SecurityGroupStack.Outputs.ELBSecGroup
         InstanceSecGroup: !GetAtt SecurityGroupStack.Outputs.InstanceSecGroup
         InstanceProfileArn: !ImportValue bluejays-delivery-role
